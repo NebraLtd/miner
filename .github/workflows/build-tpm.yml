@@ -44,8 +44,8 @@ jobs:
       - name: Setup ENV variables
         run: |
           echo "IMAGE_ARCH=amd64" >> $GITHUB_ENV
-          echo "ERLANG_IMAGE="23.3.4.6-alpine" >> $GITHUB_ENV
-          echo "ERLANG_IMAGE_SOURCE="erlang" >> $GITHUB_ENV
+          echo "ERLANG_IMAGE=23.3.4.6-alpine" >> $GITHUB_ENV
+          echo "ERLANG_IMAGE_SOURCE=erlang" >> $GITHUB_ENV
           echo "BASE_IMAGE=${ERLANG_IMAGE_SOURCE}:${ERLANG_IMAGE}" >> $GITHUB_ENV
           echo "VERSION=2021.10.18.0" >> $GITHUB_ENV
           echo "LATEST_TAG=latest-${IMAGE_ARCH}" >> $GITHUB_ENV
