@@ -28,7 +28,7 @@ ENV CC=gcc CXX=g++ CFLAGS="-U__sun__" \
 # Add our code
 ADD . /usr/src/miner/
 
-RUN ./rebar3 as ${REBAR_BUILD_TARGET} tar -n miner -v ${VERSION}
+RUN ./rebar3 as ${REBAR_BUILD_TARGET} tar -n miner -v ${VERSION} DIAGNOSTIC=1
 
 RUN mkdir -p /opt/docker/update
 RUN tar -zxvf ${TAR_PATH} -C /opt/docker
