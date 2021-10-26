@@ -43,15 +43,29 @@ jobs:
             type=ref,event=tag
       - name: Setup ENV variables
         run: |
-          echo "IMAGE_ARCH=amd64" >> $GITHUB_ENV
-          echo "ERLANG_IMAGE=23.3.4.6-alpine" >> $GITHUB_ENV
-          echo "ERLANG_IMAGE_SOURCE=erlang" >> $GITHUB_ENV
-          echo "BASE_IMAGE=$ERLANG_IMAGE_SOURCE:$ERLANG_IMAGE" >> $GITHUB_ENV
-          echo "VERSION=2021.10.18.0" >> $GITHUB_ENV
-          echo "LATEST_TAG=latest-$IMAGE_ARCH" >> $GITHUB_ENV
-          echo "DOCKER_BUILD_ARGS="'--build-arg EXTRA_BUILD_APK_PACKAGES=\"apk-tools tpm2-tss-dev\"  --build-arg EXTRA_RUNNER_APK_PACKAGES=\"apk-tools tpm2-tss-esys tpm2-tss-fapi tpm2-tss-mu tpm2-tss-rc tpm2-tss-tcti-device\" --build-arg'" BUILDER_IMAGE=$BASE_IMAGE --build-arg RUNNER_IMAGE=$BASE_IMAGE --build-arg REBAR_BUILD_TARGET=docker_tpm $DOCKER_BUILD_ARGS" >> $GITHUB_ENV
-          echo "BASE_DOCKER_NAME=$(basename $(pwd))_tpm" >> $GITHUB_ENV
-          echo "DOCKER_NAME=$BASE_DOCKER_NAME-$IMAGE_ARCH_$VERSION" >> $GITHUB_ENV
+          IMAGE_ARCH=amd64
+          ERLANG_IMAGE=23.3.4.6-alpine
+          ERLANG_IMAGE_SOURCE=erlang
+          BASE_IMAGE="$ERLANG_IMAGE_SOURCE:$ERLANG_IMAGE"
+          VERSION=2021.10.18.0
+          LATEST_TAG="latest-$IMAGE_ARCH"
+          
+          EXTRA_BUILD_APK_PACKAGES="apk-tools tpm2-tss-dev" 
+          EXTRA_RUNNER_APK_PACKAGES="apk-tools tpm2-tss-esys tpm2-tss-fapi tpm2-tss-mu tpm2-tss-rc tpm2-tss-tcti-device"
+          BUILDER_IMAGE="$BASE_IMAGE"
+          RUNNER_IMAGE="$BASE_IMAGE"
+          REBAR_BUILD_TARGET=docker_tpm
+          BASE_DOCKER_NAME="$(basename $(pwd))_tpm"
+          DOCKER_NAME="$BASE_DOCKER_NAME-$IMAGE_ARCH_$VERSION"
+          
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "DOCKER_NAME=$DOCKER_NAME" >> $GITHUB_ENV
+          echo "BASE_DOCKER_NAME=$BASE_DOCKER_NAME" >> $GITHUB_ENV
+          echo "REBAR_BUILD_TARGET=$REBAR_BUILD_TARGET" >> $GITHUB_ENV
+          echo "RUNNER_IMAGE=$RUNNER_IMAGE" >> $GITHUB_ENV
+          echo "BUILDER_IMAGE=$BUILDER_IMAGE" >> $GITHUB_ENV
+          echo "EXTRA_RUNNER_APK_PACKAGES=$EXTRA_RUNNER_APK_PACKAGES" >> $GITHUB_ENV
+          echo "EXTRA_BUILD_APK_PACKAGES=$EXTRA_BUILD_APK_PACKAGES" >> $GITHUB_ENV
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
@@ -59,6 +73,14 @@ jobs:
           push: true
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
-
+          build-args: |
+            VERSION=${{ env.VERSION }}
+            DOCKER_NAME=${{ env.DOCKER_NAME }}
+            BASE_DOCKER_NAME=${{ env.BASE_DOCKER_NAME }}
+            REBAR_BUILD_TARGET=${{ env.REBAR_BUILD_TARGET }}
+            RUNNER_IMAGE=${{ env.RUNNER_IMAGE }}
+            BUILDER_IMAGE=${{ env.BUILDER_IMAGE }}
+            EXTRA_RUNNER_APK_PACKAGES=${{ env.EXTRA_RUNNER_APK_PACKAGES }}
+            EXTRA_BUILD_APK_PACKAGES=${{ env.EXTRA_BUILD_APK_PACKAGES }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
