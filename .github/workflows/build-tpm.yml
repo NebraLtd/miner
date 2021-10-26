@@ -46,12 +46,12 @@ jobs:
           echo "IMAGE_ARCH=amd64" >> $GITHUB_ENV
           echo "ERLANG_IMAGE=23.3.4.6-alpine" >> $GITHUB_ENV
           echo "ERLANG_IMAGE_SOURCE=erlang" >> $GITHUB_ENV
-          echo "BASE_IMAGE=${ERLANG_IMAGE_SOURCE}:${ERLANG_IMAGE}" >> $GITHUB_ENV
+          echo "BASE_IMAGE=$ERLANG_IMAGE_SOURCE:$ERLANG_IMAGE" >> $GITHUB_ENV
           echo "VERSION=2021.10.18.0" >> $GITHUB_ENV
-          echo "LATEST_TAG=latest-${IMAGE_ARCH}" >> $GITHUB_ENV
-          echo "DOCKER_BUILD_ARGS="'--build-arg EXTRA_BUILD_APK_PACKAGES=\"apk-tools tpm2-tss-dev\"  --build-arg EXTRA_RUNNER_APK_PACKAGES=\"apk-tools tpm2-tss-esys tpm2-tss-fapi tpm2-tss-mu tpm2-tss-rc tpm2-tss-tcti-device\" --build-arg'" BUILDER_IMAGE=${BASE_IMAGE} --build-arg RUNNER_IMAGE=${BASE_IMAGE} --build-arg REBAR_BUILD_TARGET=docker_tpm ${DOCKER_BUILD_ARGS}" >> $GITHUB_ENV
+          echo "LATEST_TAG=latest-$IMAGE_ARCH" >> $GITHUB_ENV
+          echo "DOCKER_BUILD_ARGS="'--build-arg EXTRA_BUILD_APK_PACKAGES=\"apk-tools tpm2-tss-dev\"  --build-arg EXTRA_RUNNER_APK_PACKAGES=\"apk-tools tpm2-tss-esys tpm2-tss-fapi tpm2-tss-mu tpm2-tss-rc tpm2-tss-tcti-device\" --build-arg'" BUILDER_IMAGE=$BASE_IMAGE --build-arg RUNNER_IMAGE=$BASE_IMAGE --build-arg REBAR_BUILD_TARGET=docker_tpm $DOCKER_BUILD_ARGS" >> $GITHUB_ENV
           echo "BASE_DOCKER_NAME=$(basename $(pwd))_tpm" >> $GITHUB_ENV
-          echo "DOCKER_NAME=${BASE_DOCKER_NAME}-${IMAGE_ARCH}_${VERSION}" >> $GITHUB_ENV
+          echo "DOCKER_NAME=$BASE_DOCKER_NAME-$IMAGE_ARCH_$VERSION" >> $GITHUB_ENV
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
