@@ -49,7 +49,7 @@ jobs:
           ERLANG_IMAGE=23.3.4.6-alpine
           ERLANG_IMAGE_SOURCE=erlang
           BASE_IMAGE="$ERLANG_IMAGE_SOURCE:$ERLANG_IMAGE"
-          VERSION=2021.10.18.0
+          VERSION="2021.10.18"
           LATEST_TAG="latest-$IMAGE_ARCH"
           
           EXTRA_BUILD_APK_PACKAGES="apk-tools tpm2-tss-dev" 
